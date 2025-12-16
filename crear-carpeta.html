@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Memotori | Creación de Carpeta</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .container-creacion { padding: 40px; max-width: 800px; margin: auto; }
+        .input-group { margin-bottom: 25px; }
+        .label-custom { display: block; font-family: 'Fredoka One', sans-serif; font-size: 20px; margin-bottom: 10px; text-transform: uppercase; }
+        .input-custom { width: 100%; padding: 15px; border: 2px solid #000; border-radius: 12px; font-size: 16px; box-sizing: border-box; }
+        
+        /* Contenedor de la tarjeta azul de la imagen */
+        .card-creator {
+            background-color: var(--primary); /* #30B7BE del CSS */
+            border: 3px solid #000;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 8px 8px 0 #000;
+            display: flex;
+            gap: 20px;
+        }
+        .inputs-tarjeta { flex: 2; display: flex; flex-direction: column; gap: 10px; }
+        .image-placeholder { 
+            flex: 1; border: 2px dashed #fff; border-radius: 10px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;
+        }
+        .btn-accion {
+            background-color: var(--accent); /* #E72D72 del CSS */
+            color: white; border: 2px solid #000; padding: 10px 30px;
+            border-radius: 10px; cursor: pointer; font-family: 'Fredoka One', sans-serif;
+            box-shadow: 4px 4px 0 #000; margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="logo"><img src="imagenes/logo.png" alt="Logo"></div>
+    </header>
+
+    <main class="container-creacion">
+        <div class="input-group">
+            <label class="label-custom">Nombre de Categoría</label>
+            <input type="text" class="input-custom" id="categoryName" placeholder="Introduzca un nombre">
+        </div>
+
+        <div class="input-group">
+            <label class="label-custom">Descripción de la Categoría</label>
+            <textarea class="input-custom" id="categoryDescription" placeholder="Añade una descripción"></textarea>
+        </div>
+
+        <h2 style="text-align: center; font-family: 'Fredoka One';">CREACIÓN DE TARJETAS</h2>
+
+        <div class="card-creator">
+            <div class="inputs-tarjeta">
+                <input type="text" class="input-custom" placeholder="Introduzca un concepto">
+                <input type="text" class="input-custom" placeholder="Introduzca una definición">
+                <input type="text" class="input-custom" placeholder="Definición extra">
+            </div>
+            <div class="image-placeholder">
+                <i class="fas fa-image" style="font-size: 40px;"></i>
+                <span>Insertar Imagen</span>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <button class="btn-accion" id="saveCategoryBtn">✓</button>
+        </div>
+    </main>
+    <script src="js/addCategory.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+</html>

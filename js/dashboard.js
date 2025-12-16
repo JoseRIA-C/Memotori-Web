@@ -1,0 +1,124 @@
+document.addEventListener('DOMContentLoaded', () => {
+
+
+    const user = JSON.parse(localStorage.getItem('loggedUser'));
+
+    if (!user) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    document.getElementById('welcome').textContent = `Hola, ${user.name}`;
+
+
+
+    const dashboard = document.getElementById('dashboard');
+    const addBtn = document.getElementById('addCategoryBtn');
+
+    const modal = document.getElementById('categoryModal');
+    const editBtn = document.getElementById('editCategoryBtn');
+    const deleteBtn = document.getElementById('deleteCategoryBtn');
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    let selectedIndex = null;
+
+    function getCategories() {
+        return JSON.parse(localStorage.getItem('categories')) || [];
+    }
+
+    function saveCategories(categories) {
+        localStorage.setItem('categories', JSON.stringify(categories));
+    }
+
+    function renderCategories() {
+        const categories = getCategories();
+        dashboard.innerHTML = '';
+
+        if (categories.length === 0) {
+            dashboard.innerHTML = '<p style="opacity:.5">No hay categorías</p>';
+            return;
+        }
+
+        categories.forEach((cat, index) => {
+            const card = document.createElement('div');
+            card.className = 'folder-card';
+
+            card.innerHTML = `
+                <span class="folder-menu" data-index="${index}">
+                    <i class="fas fa-ellipsis-v"></i>
+                </span>
+                <h2>${cat.name}</h2>
+            `;
+
+            dashboard.appendChild(card);
+        });
+
+        bindMenus();
+    }
+
+    /* ================= MENÚ 3 PUNTOS ================= */
+    function bindMenus() {
+        document.querySelectorAll('.folder-menu').forEach(menu => {
+            menu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedIndex = menu.dataset.index;
+                openModal();
+            });
+        });
+    }
+
+    /* ================= MODAL ================= */
+    function openModal() {
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+        selectedIndex = null;
+    }
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    editBtn.addEventListener('click', () => {
+        const categories = getCategories();
+        const newName = prompt(
+            'Nuevo nombre:',
+            categories[selectedIndex].name
+        );
+
+        if (newName) {
+            categories[selectedIndex].name = newName;
+            saveCategories(categories);
+            renderCategories();
+        }
+
+        closeModal();
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        if (!confirm('¿Eliminar esta categoría?')) return;
+
+        const categories = getCategories();
+        categories.splice(selectedIndex, 1);
+        saveCategories(categories);
+        renderCategories();
+        closeModal();
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    /* ================= BOTÓN + ================= */
+    addBtn.addEventListener('click', () => {
+        window.location.href = 'crear-carpeta.html';
+    });
+
+    renderCategories();
+});
+
+/* ================= LOGOUT ================= */
+function logout() {
+    localStorage.removeItem('loggedUser');
+    window.location.href = 'index.html';
+}

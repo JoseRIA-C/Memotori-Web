@@ -2,21 +2,48 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Página principal</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Memotori | Dashboard</title>
+
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
-        <h1 id="welcome"></h1>
-        <button onclick="logout()">Cerrar sesión</button>
-    </header>
+<header class="topbar">
+    <div class="logo">
+        <img src="imagenes/logo.png" alt="Memotori Logo">
+    </div>
 
-    <main>
-        <h2>Bienvenido a la aplicación</h2>
-        <p>Esta es la página principal después de iniciar sesión.</p>
-    </main>
+    <div class="search-box">
+        <input type="text" placeholder="Buscar">
+        <i class="fas fa-search"></i>
+    </div>
 
-    <script src="dashboard.js"></script>
+    <div class="user-menu">
+        <span class="user-name" id="welcome">Hola</span>
+        <i class="fas fa-user-circle user-icon"></i>
+        <div class="dropdown-menu">
+            <a href="#" onclick="logout()">Cerrar sesión</a>
+        </div>
+    </div>
+</header>
+
+<main class="dashboard" id="dashboard"></main>
+
+<button class="floating-btn" id="addCategoryBtn">
+    <i class="fas fa-plus"></i>
+</button>
+
+<!-- MODAL OPCIONES -->
+<div class="modal-overlay" id="categoryModal">
+    <div class="modal-box">
+        <button class="modal-btn edit" id="editCategoryBtn">Modificar</button>
+        <button class="modal-btn delete" id="deleteCategoryBtn">Eliminar</button>
+        <button class="modal-btn cancel" id="closeModalBtn">Cancelar</button>
+    </div>
+</div>
+
+<script src="js/dashboard.js"></script>
 </body>
 </html>
