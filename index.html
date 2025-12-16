@@ -30,16 +30,21 @@
         <div class="card-container" id="card">
             <div class="card-face front">
                 <div class="img"><img class="logo" src="logo.png"></div>
-                <form class="form-login">
+                <form class="form-login" id="login-form">
 
                     <label class="label-form">Usuario</label>
-                    <input class="input-form" type="email" required placeholder="Ingresa tu email">
-                    <label class="label-form">Contraseña</label>
-                    <input class="input-form" type="password" required placeholder="Ingresa tu contraseña">
-                    <a href="#" class="forgotten-pass">¿Olvidaste tu contraseña?</a>
-                    <button class="button-form">Iniciar sesion</button>
+                    <input class="input-form" type="email" id="login-email" required placeholder="Ingresa tu email">
 
-                </form> 
+                    <label class="label-form">Contraseña</label>
+                    <input class="input-form" type="password" id="login-password" required placeholder="Ingresa tu contraseña">
+
+                    <a href="#" class="forgotten-pass">¿Olvidaste tu contraseña?</a>
+                    <button class="button-form" type="submit">Iniciar sesión</button>
+
+                </form>
+
+                <p id="login-msg"></p>
+                
 
                 <label class="new-user-label">¿Nuevo usuario? <a href="#" id="btn-registrar">Crea tu cuenta</a></label><a></a>
 
@@ -58,15 +63,23 @@
 
             <div class="card-face back">
                 <img class="logo" src="logo.png">
-                <form class="form-login">
+                <form class="form-login" id="register-form">
+
                     <label class="label-form">Nombre de usuario</label>
-                    <input class="input-form" type="text" required placeholder="Ejem. Froppy Alberto">
+                    <input class="input-form" type="text" id="register-name" required placeholder="Ejem. Froppy Alberto">
+
                     <label class="label-form">Email</label>
-                    <input class="input-form" type="email" required placeholder="Ejem. ejemplo@gmail.com">
-                    <label class="label-form">Email</label>
-                    <input class="input-form" type="password" required placeholder="Ejem. Juanito_Alcachofa123">
-                    <button class="button-form">Crear cuenta</button>
-                </form> 
+                    <input class="input-form" type="email" id="register-email" required placeholder="Ejem. ejemplo@gmail.com">
+
+                    <label class="label-form">Contraseña</label>
+                    <input class="input-form" type="password" id="register-password" required placeholder="Juanito_123">
+
+                    <button class="button-form" type="submit">Crear cuenta</button>
+
+                </form>
+
+                <p id="register-msg"></p>
+
 
                 <label class="new-user-label">¿Ya tienes cuenta? <a href="#" id="btn-iniciar">Inicia sesion!</a></label><a></a>
 
@@ -158,6 +171,8 @@
     <script src="script.js"></script>
     <script src="menu.js"></script>
     <script src="carrusel.js"></script>
+    <script src="login.js"></script>
+
 
 </body>
 </html>
