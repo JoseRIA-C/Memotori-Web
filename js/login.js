@@ -19,14 +19,14 @@ loginForm.addEventListener('submit', (e) => {
     );
 
     if (!user) {
-        loginMsg.textContent = '❌ Usuario o contraseña incorrectos';
+        loginMsg.textContent = 'Usuario o contraseña incorrectos';
         loginMsg.style.color = 'red';
         return;
     }
 
     localStorage.setItem('loggedUser', JSON.stringify(user));
 
-    loginMsg.textContent = '✅ Acceso correcto';
+    loginMsg.textContent = 'Acceso correcto';
     loginMsg.style.color = 'green';
 
     setTimeout(() => {

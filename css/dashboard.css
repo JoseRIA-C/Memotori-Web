@@ -160,8 +160,8 @@ body {
 
 /* BOTONES COMO TEXTO */
 .modal-btn {
-    all: unset;                /* elimina estilos nativos */
-    display: flex;             /* fuerza centrado real */
+    all: unset;                
+    display: flex;             
     justify-content: center;
     align-items: center;
     width: 100%;
