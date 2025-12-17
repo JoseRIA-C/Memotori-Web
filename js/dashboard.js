@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2>${cat.name}</h2>
             `;
 
-            // 👉 CLICK A TODA LA CARD
             card.addEventListener('click', () => {
                 localStorage.setItem('selectedCategory', index);
                 window.location.href = 'desktop.html';
@@ -60,11 +59,10 @@ document.addEventListener('DOMContentLoaded', () => {
         bindMenus();
     }
 
-    /* ===== MENÚ 3 PUNTOS ===== */
     function bindMenus() {
         document.querySelectorAll('.folder-menu').forEach(menu => {
             menu.addEventListener('click', (e) => {
-                e.stopPropagation(); // 🔑 evita que navegue
+                e.stopPropagation(); 
                 selectedIndex = menu.dataset.index;
                 modal.style.display = 'flex';
             });
@@ -106,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCategories();
 });
 
-/* ===== LOGOUT ===== */
 function logout() {
     localStorage.removeItem('loggedUser');
     window.location.href = 'index.html';

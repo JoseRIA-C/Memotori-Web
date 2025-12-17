@@ -1,16 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const mode = localStorage.getItem('formMode') || 'newCategory';
+
+
     const addCardBtn = document.getElementById('addCardBtn');
-    const saveBtn = document.getElementById('saveCategoryBtn');
+    const saveBtn = document.getElementById('saveBtn');
     const cardsPreview = document.getElementById('cardsPreview');
 
     const conceptInput = document.getElementById('cardConcept');
     const definitionInput = document.getElementById('cardDefinition');
     const extraInput = document.getElementById('cardExtra');
 
+    const categoryFields = document.getElementById('categoryFields');
+    const title = document.getElementById('formTitle');
+
     let cards = [];
 
-    /* ===== AÑADIR TARJETA ===== */
+
+    if (mode === 'newCategory') {
+        title.textContent = 'CREAR CATEGORÍA';
+        saveBtn.textContent = '✓ Guardar categoría';
+    } else {
+        title.textContent = 'AÑADIR TARJETAS';
+        saveBtn.textContent = '✓ Guardar tarjetas';
+        categoryFields.style.display = 'none';
+    }
+
     addCardBtn.addEventListener('click', () => {
 
         const concept = conceptInput.value.trim();
@@ -23,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         cards.push({ concept, definition, extra });
-
         renderPreview();
 
         conceptInput.value = '';
@@ -31,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
         extraInput.value = '';
     });
 
-    /* ===== PREVIEW CON FLIP CARD ===== */
     function renderPreview() {
         cardsPreview.innerHTML = '';
 
@@ -41,11 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
             wrapper.className = 'flip-container';
 
             wrapper.innerHTML = `
-                <div class="flip-card" id="card-${index}">
+                <div class="flip-card">
+                    <button class="delete-card">✖</button>
+
                     <div class="card-face card-front">
                         <span>${card.concept}</span>
                         <div class="divider"></div>
-                        📷
                     </div>
 
                     <div class="card-face card-back">
@@ -57,40 +71,57 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             wrapper.addEventListener('click', () => {
-                document.getElementById(`card-${index}`).classList.toggle('flipped');
+                wrapper.querySelector('.flip-card').classList.toggle('flipped');
+            });
+
+            wrapper.querySelector('.delete-card').addEventListener('click', (e) => {
+                e.stopPropagation();
+                cards.splice(index, 1);
+                renderPreview();
             });
 
             cardsPreview.appendChild(wrapper);
         });
     }
 
-    /* ===== GUARDAR CATEGORÍA ===== */
     saveBtn.addEventListener('click', () => {
 
-        const name = document.getElementById('categoryName').value.trim();
-        const description = document.getElementById('categoryDescription').value.trim();
-
-        if (!name) {
-            alert('El nombre de la categoría es obligatorio');
-            return;
-        }
-
         if (cards.length === 0) {
-            alert('Debes agregar al menos una tarjeta');
+            alert('Agrega al menos una tarjeta');
             return;
         }
 
         const categories = JSON.parse(localStorage.getItem('categories')) || [];
 
-        categories.push({
-            name,
-            description,
-            cards
-        });
+        if (mode === 'newCategory') {
+
+            const name = document.getElementById('categoryName').value.trim();
+            const description = document.getElementById('categoryDescription').value.trim();
+
+            if (!name) {
+                alert('El nombre de la categoría es obligatorio');
+                return;
+            }
+
+            categories.push({
+                name,
+                description,
+                cards
+            });
+
+        } else {
+            const selectedIndex = localStorage.getItem('selectedCategory');
+            categories[selectedIndex].cards.push(...cards);
+        }
 
         localStorage.setItem('categories', JSON.stringify(categories));
+        localStorage.removeItem('formMode');
 
-        window.location.href = 'dashboard.html';
+        if (mode === 'addCards') {
+            window.location.href = 'desktop.html';
+        } else {
+            window.location.href = 'dashboard.html';
+        }
     });
 
 });

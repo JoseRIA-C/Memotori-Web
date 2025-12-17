@@ -39,6 +39,27 @@
             gap: 20px;
         }
 
+        .delete-card {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #E72D72;
+            border: 2px solid #000;
+            color: white;
+            font-size: 14px;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            z-index: 5;
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .delete-card:hover {
+            transform: scale(1.1);
+        }
+
+
         .inputs-tarjeta {
             flex: 2;
             display: flex;
@@ -95,18 +116,21 @@
 
 <main class="container-creacion">
 
-    <!-- DATOS CATEGORÍA -->
-    <div class="input-group">
-        <label class="titulo">Nombre de Categoría</label>
-        <input id="categoryName" type="text" class="input-custom" placeholder="Introduzca un nombre">
+    <h2 class="titulo" id="formTitle" style="text-align:center;"></h2>
+
+    <!-- CAMPOS DE CATEGORÍA -->
+    <div id="categoryFields">
+        <div class="input-group">
+            <label class="titulo">Nombre de Categoría</label>
+            <input id="categoryName" type="text" class="input-custom" placeholder="Agregar nombre de la categoria">
+        </div>
+
+        <div class="input-group">
+            <label class="titulo">Descripción de la Categoría</label>
+            <textarea id="categoryDescription" class="input-custom" placeholder="Agregar descripcion"></textarea>
+        </div>
     </div>
 
-    <div class="input-group">
-        <label class="titulo">Descripción de la Categoría</label>
-        <textarea id="categoryDescription" class="input-custom" placeholder="Añade una descripción"></textarea>
-    </div>
-
-    <!-- CREACIÓN DE TARJETAS -->
     <h3 class="titulo" style="text-align:center;">CREACIÓN DE TARJETAS</h3>
 
     <div class="card-creator">
@@ -117,23 +141,24 @@
         </div>
 
         <div class="image-placeholder">
-            📷
-            <span>Imagen (próximo)</span>
+            <span>Imagen</span>
         </div>
     </div>
 
-    <!-- BOTONES -->
     <div class="actions">
         <button class="btn-add" id="addCardBtn">+ Añadir tarjeta</button>
-        <button class="btn-check" id="saveCategoryBtn">✓ Guardar</button>
+        <button class="btn-check" id="saveBtn"></button>
     </div>
 
-    <!-- PREVIEW -->
-    <h3 class="titulo" style="margin-top:50px;">Tarjetas añadidas</h3>
     <div id="cardsPreview" class="cards-preview"></div>
 
 </main>
 
+<button id="backBtn" class="back-btn">
+    ← Volver
+</button>
+
+<script src="js/backButton.js"></script>
 <script src="js/addCategory.js"></script>
 </body>
 </html>
