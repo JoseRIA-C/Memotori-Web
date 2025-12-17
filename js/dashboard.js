@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-
     const user = JSON.parse(localStorage.getItem('loggedUser'));
 
     if (!user) {
@@ -9,8 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('welcome').textContent = `Hola, ${user.name}`;
-
-
 
     const dashboard = document.getElementById('dashboard');
     const addBtn = document.getElementById('addCategoryBtn');
@@ -40,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         categories.forEach((cat, index) => {
+
             const card = document.createElement('div');
             card.className = 'folder-card';
 
@@ -50,43 +48,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2>${cat.name}</h2>
             `;
 
+            // 👉 CLICK A TODA LA CARD
+            card.addEventListener('click', () => {
+                localStorage.setItem('selectedCategory', index);
+                window.location.href = 'desktop.html';
+            });
+
             dashboard.appendChild(card);
         });
 
         bindMenus();
     }
 
-    /* ================= MENÚ 3 PUNTOS ================= */
+    /* ===== MENÚ 3 PUNTOS ===== */
     function bindMenus() {
         document.querySelectorAll('.folder-menu').forEach(menu => {
             menu.addEventListener('click', (e) => {
-                e.stopPropagation();
+                e.stopPropagation(); // 🔑 evita que navegue
                 selectedIndex = menu.dataset.index;
-                openModal();
+                modal.style.display = 'flex';
             });
         });
     }
 
-    /* ================= MODAL ================= */
-    function openModal() {
-        modal.style.display = 'flex';
-    }
-
-    function closeModal() {
+    closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
         selectedIndex = null;
-    }
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
     });
 
     editBtn.addEventListener('click', () => {
         const categories = getCategories();
-        const newName = prompt(
-            'Nuevo nombre:',
-            categories[selectedIndex].name
-        );
+        const newName = prompt('Nuevo nombre:', categories[selectedIndex].name);
 
         if (newName) {
             categories[selectedIndex].name = newName;
@@ -94,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             renderCategories();
         }
 
-        closeModal();
+        modal.style.display = 'none';
     });
 
     deleteBtn.addEventListener('click', () => {
@@ -104,12 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
         categories.splice(selectedIndex, 1);
         saveCategories(categories);
         renderCategories();
-        closeModal();
+        modal.style.display = 'none';
     });
 
-    closeBtn.addEventListener('click', closeModal);
-
-    /* ================= BOTÓN + ================= */
     addBtn.addEventListener('click', () => {
         window.location.href = 'crear-carpeta.html';
     });
@@ -117,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCategories();
 });
 
-/* ================= LOGOUT ================= */
+/* ===== LOGOUT ===== */
 function logout() {
     localStorage.removeItem('loggedUser');
     window.location.href = 'index.html';
