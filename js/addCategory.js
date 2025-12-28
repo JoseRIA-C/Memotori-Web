@@ -1,43 +1,41 @@
+const API = "https://memotoriapi.onrender.com";
+
 document.addEventListener('DOMContentLoaded', () => {
-
-    const mode = localStorage.getItem('formMode') || 'newCategory';
-
 
     const addCardBtn = document.getElementById('addCardBtn');
     const saveBtn = document.getElementById('saveBtn');
     const cardsPreview = document.getElementById('cardsPreview');
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
 
     const conceptInput = document.getElementById('cardConcept');
     const definitionInput = document.getElementById('cardDefinition');
     const extraInput = document.getElementById('cardExtra');
 
     const categoryFields = document.getElementById('categoryFields');
+    const categoryTitle = document.getElementById("categoryName");
+    const categoryDescription = document.getElementById("categoryDescription");
     const title = document.getElementById('formTitle');
 
     let cards = [];
-
-
-    if (mode === 'newCategory') {
-        title.textContent = 'CREAR CATEGORÍA';
-        saveBtn.textContent = '✓ Guardar categoría';
-    } else {
-        title.textContent = 'AÑADIR TARJETAS';
-        saveBtn.textContent = '✓ Guardar tarjetas';
-        categoryFields.style.display = 'none';
-    }
+    
+    title.textContent = 'CREAR CATEGORÍA';
+    saveBtn.textContent = '✓ Guardar categoría';
+    
 
     addCardBtn.addEventListener('click', () => {
 
-        const concept = conceptInput.value.trim();
-        const definition = definitionInput.value.trim();
-        const extra = extraInput.value.trim();
+        const concepto = conceptInput.value.trim();
+        const definicion = definitionInput.value.trim();
+        const definicionExtra = extraInput.value.trim();
 
-        if (!concept || !definition) {
+        if (!concepto || !definicion) {
             alert('Concepto y definición son obligatorios');
             return;
         }
 
-        cards.push({ concept, definition, extra });
+        cards.push({ concepto: concepto, definicion: definicion, definicionExtra: definicionExtra });
         renderPreview();
 
         conceptInput.value = '';
@@ -58,14 +56,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="delete-card">✖</button>
 
                     <div class="card-face card-front">
-                        <span>${card.concept}</span>
+                        <span>${card.concepto}</span>
                         <div class="divider"></div>
                     </div>
 
                     <div class="card-face card-back">
-                        <span>${card.definition}</span>
+                        <span>${card.definicion}</span>
                         <div class="divider"></div>
-                        <span class="card-small">${card.extra || ''}</span>
+                        <span class="card-small">${card.definicionExtra || ''}</span>
                     </div>
                 </div>
             `;
@@ -84,44 +82,95 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', async () => {
 
         if (cards.length === 0) {
             alert('Agrega al menos una tarjeta');
             return;
         }
 
-        const categories = JSON.parse(localStorage.getItem('categories')) || [];
+        if (!categoryTitle.value.trim()) {
+            alert("La categoría debe tener título");
+            return;
+        }
 
-        if (mode === 'newCategory') {
-
-            const name = document.getElementById('categoryName').value.trim();
-            const description = document.getElementById('categoryDescription').value.trim();
-
-            if (!name) {
-                alert('El nombre de la categoría es obligatorio');
-                return;
-            }
-
-            categories.push({
-                name,
-                description,
-                cards
+        try {
+            const categoria = await saveCategory({
+                nombre: categoryTitle.value.trim(),
+                descripcion: categoryDescription.value.trim()
             });
 
-        } else {
-            const selectedIndex = localStorage.getItem('selectedCategory');
-            categories[selectedIndex].cards.push(...cards);
-        }
+            const idCategory = categoria.id;
 
-        localStorage.setItem('categories', JSON.stringify(categories));
-        localStorage.removeItem('formMode');
+            await saveCards(cards, idCategory);
 
-        if (mode === 'addCards') {
-            window.location.href = 'desktop.html';
-        } else {
             window.location.href = 'dashboard.html';
+
+        } catch (error) {
+            console.error(error);
+            alert("Error al guardar");
         }
     });
+
+
+
+    async function saveCards(cards, idCat) {
+
+        for (const card of cards) {
+            await saveCard({
+                concepto: card.concepto,
+                definicion: card.definicion,
+                definicionExtra: card.definicionExtra,
+                imagen: "miau"
+            }, idCat);
+        }
+    }
+
+    async function saveCard(card, idCat) {
+
+        let userId = user.id;
+
+        try{
+            let response = await fetch(`${API}/cards/${idCat}/${userId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(card)
+                });
+
+            return await response.json();
+        }catch(error){
+            console.log(error);
+        }
+        
+    }
+
+    async function saveCategory(category) {
+
+        let userId = user.id;
+
+
+        try{
+            let response = await fetch(`${API}/decks/${userId}`, {
+                method: "POST",
+                headers: {
+                        "Content-Type": "application/json"
+                    },
+                body: JSON.stringify(category)
+            });
+
+
+            if (!response.ok) {
+                throw new Error("Error al guardar categoría");
+            }
+
+            return await response.json();
+
+        }catch(error){
+            console.log(error);
+        }
+
+    }
 
 });

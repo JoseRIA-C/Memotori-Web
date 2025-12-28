@@ -1,11 +1,15 @@
-  const card = document.getElementById('card');
-  const btnRegistrar = document.getElementById('btn-registrar');
-  const btnLogin = document.getElementById('btn-iniciar');
+document.addEventListener('DOMContentLoaded', () => {
 
-  btnRegistrar.addEventListener('click', () => {
+  const card = document.getElementById('card');
+  const btnRegistrarFace = document.getElementById('btn-registrar');
+  const btnLoginFace = document.getElementById('btn-iniciar');
+
+  btnRegistrarFace.addEventListener('click', () => {
     card.classList.add('flipped');
   });
 
-  btnLogin.addEventListener('click', () => {
+  btnLoginFace.addEventListener('click', () => {
     card.classList.remove('flipped');
   });
+
+});

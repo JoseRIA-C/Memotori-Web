@@ -78,12 +78,16 @@ body {
   display: flex;
   flex-direction: column;
   gap: 50px;
+  align-items: center;
 }
 
 /* FOLDERS */
 .folder-card {
   background-color: var(--primary);
   height: 160px;
+  width: 60%;
+  max-width: 80%;
+  min-width: 40%;
   border-radius: 10px;
   box-shadow: var(--shadow);
   position: relative;

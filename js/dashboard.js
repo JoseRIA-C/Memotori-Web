@@ -1,110 +1,95 @@
+const API = "https://memotoriapi.onrender.com";
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    const user = JSON.parse(localStorage.getItem('loggedUser'));
+    // 🔐 Usuario logueado
+    const user = JSON.parse(localStorage.getItem('user'));
 
     if (!user) {
         window.location.href = 'index.html';
         return;
     }
 
-    document.getElementById('welcome').textContent = `Hola, ${user.name}`;
+    document.getElementById('welcome').textContent = `Hola, user`;
 
     const dashboard = document.getElementById('dashboard');
     const addBtn = document.getElementById('addCategoryBtn');
 
     const modal = document.getElementById('categoryModal');
-    const editBtn = document.getElementById('editCategoryBtn');
-    const deleteBtn = document.getElementById('deleteCategoryBtn');
     const closeBtn = document.getElementById('closeModalBtn');
 
-    let selectedIndex = null;
+    let selectedCategory = null;
 
-    function getCategories() {
-        return JSON.parse(localStorage.getItem('categories')) || [];
+    // 📦 Obtener categorías desde la API
+    async function fetchCategories() {
+        try {
+            const res = await fetch(`${API}/decks/user/${user.id}`);
+
+            if (!res.ok) {
+                throw new Error("Error HTTP " + res.status);
+            }
+
+            return await res.json();
+        } catch (error) {
+            console.error("Error al cargar categorías", error);
+            return [];
+        }
     }
 
-    function saveCategories(categories) {
-        localStorage.setItem('categories', JSON.stringify(categories));
-    }
-
-    function renderCategories() {
-        const categories = getCategories();
+    // 🎨 Renderizar categorías
+    async function renderCategories() {
+        const categories = await fetchCategories();
         dashboard.innerHTML = '';
 
-        if (categories.length === 0) {
+        if (!Array.isArray(categories) || categories.length === 0) {
             dashboard.innerHTML = '<p style="opacity:.5">No hay categorías</p>';
             return;
         }
 
-        categories.forEach((cat, index) => {
+        categories.forEach(cat => {
 
             const card = document.createElement('div');
             card.className = 'folder-card';
 
             card.innerHTML = `
-                <span class="folder-menu" data-index="${index}">
+                <span class="folder-menu">
                     <i class="fas fa-ellipsis-v"></i>
                 </span>
-                <h2>${cat.name}</h2>
+                <h2>${cat.nombre}</h2>
             `;
 
             card.addEventListener('click', () => {
-                localStorage.setItem('selectedCategory', index);
-                window.location.href = 'desktop.html';
+                localStorage.setItem('selectedCategory', JSON.stringify(cat));
+                localStorage.setItem("user", JSON.stringify(user));
+                window.location.href = `desktop.html`;
+
+            });
+
+            card.querySelector('.folder-menu').addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedCategory = cat;
+                modal.style.display = 'flex';
             });
 
             dashboard.appendChild(card);
-        });
-
-        bindMenus();
-    }
-
-    function bindMenus() {
-        document.querySelectorAll('.folder-menu').forEach(menu => {
-            menu.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                selectedIndex = menu.dataset.index;
-                modal.style.display = 'flex';
-            });
         });
     }
 
     closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
-        selectedIndex = null;
-    });
-
-    editBtn.addEventListener('click', () => {
-        const categories = getCategories();
-        const newName = prompt('Nuevo nombre:', categories[selectedIndex].name);
-
-        if (newName) {
-            categories[selectedIndex].name = newName;
-            saveCategories(categories);
-            renderCategories();
-        }
-
-        modal.style.display = 'none';
-    });
-
-    deleteBtn.addEventListener('click', () => {
-        if (!confirm('¿Eliminar esta categoría?')) return;
-
-        const categories = getCategories();
-        categories.splice(selectedIndex, 1);
-        saveCategories(categories);
-        renderCategories();
-        modal.style.display = 'none';
+        selectedCategory = null;
     });
 
     addBtn.addEventListener('click', () => {
+        localStorage.setItem("user", JSON.stringify(user));
         window.location.href = 'crear-carpeta.html';
     });
 
     renderCategories();
 });
 
+// 🚪 Logout
 function logout() {
-    localStorage.removeItem('loggedUser');
+    localStorage.clear();
     window.location.href = 'index.html';
 }

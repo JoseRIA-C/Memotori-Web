@@ -1,32 +1,60 @@
-const loginForm = document.getElementById('login-form');
-const loginEmail = document.getElementById('login-email');
-const loginPassword = document.getElementById('login-password');
+const API = "https://memotoriapi.onrender.com";
 
-const users = [
-    { email: 'admin@gmail.com', password: '123456', name: 'Admin' },
-    { email: 'usuario@gmail.com', password: 'password', name: 'Usuario' }
-];
+document.addEventListener('DOMContentLoaded', () => {
 
-loginForm.addEventListener('submit', (e) => {
+  const btnLogin = document.getElementById('btnLogin');
+  const inputEmail = document.getElementById("login-email");
+  const inputPassword = document.getElementById("login-password");
+
+  btnLogin.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    const email = loginEmail.value.trim();
-    const password = loginPassword.value.trim();
+    const email = inputEmail.value.trim();
+    const password = inputPassword.value.trim();
 
-    const user = users.find(
-        u => u.email === email && u.password === password
-    );
-
-    if (!user) {
-
-        return;
+    if (!email) {
+      alert("Introduzca un email");
+      return;
     }
 
-    localStorage.setItem('loggedUser', JSON.stringify(user));
+    if (!password) {
+      alert("Introduzca una contraseña");
+      return;
+    }
 
+    try {
+      const response = await login({ email, password });
 
+      if (response.error) {
+        alert(response.error);
+        return;
+      }
 
-    setTimeout(() => {
-        window.location.href = 'dashboard.html';
-    }, 500);
+      // guardar sesión
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      alert("Todo bien 😄");
+      window.location.href = "dashboard.html";
+
+    } catch (err) {
+      console.error(err);
+      alert("Error al iniciar sesión");
+    }
+  });
+
+  async function login(user) {
+    const response = await fetch(`${API}/login/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(user)
+    });
+
+    if (!response.ok) {
+      throw new Error("Credenciales incorrectas");
+    }
+
+    return await response.json();
+  }
 });
