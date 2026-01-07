@@ -75,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="card-face card-front">
                         <span>${card.concepto}</span>
                         <div class="divider"></div>
+                        <div class="img-container">
+                            <img src="${card.imagen}">
+                        </div>
                     </div>
 
                     <div class="card-face card-back">

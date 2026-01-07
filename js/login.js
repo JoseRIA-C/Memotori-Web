@@ -43,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   async function login(user) {
-    const response = await fetch(`${API}/login/`, {
+    
+    const response = await fetch(`${API}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -52,9 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (!response.ok) {
-      throw new Error("Credenciales incorrectas");
+      const errorData = await response.json();
+      throw errorData;
     }
 
     return await response.json();
   }
+
 });
