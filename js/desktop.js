@@ -106,14 +106,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createCardElement(card, isSaved, tempIndex) {
-        const container = document.createElement('div');
-        container.className = 'flip-container';
-        container.innerHTML = `
+    const container = document.createElement('div');
+    container.className = 'flip-container';
+
+    const imageHTML = card.imagen
+        ? `<div class="img-container">
+               <img src="${card.imagen}" class="real-img" />
+           </div>`
+        : `<div class="img-container">
+               <img src="assets/img/default-card.svg" class="default-img" />
+           </div>`;
+
+    container.innerHTML = `
             <div class="flip-card">
                 <button class="delete-card">✖</button>
+
                 <div class="card-face card-front">
+                    ${imageHTML}
                     <span>${card.concepto}</span>
                 </div>
+
                 <div class="card-face card-back">
                     <span>${card.definicion}</span>
                     <span class="card-small">${card.definicionExtra || ''}</span>
